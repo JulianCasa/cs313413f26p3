@@ -17,8 +17,8 @@ public class Draw implements Visitor<Void> {
     private final Paint paint;
 
     public Draw(final Canvas canvas, final Paint paint) {
-        this.canvas = null; // FIXME
-        this.paint = null; // FIXME
+        this.canvas = canvas; // Fixed
+        this.paint = paint; // Fixed
         paint.setStyle(Style.STROKE);
     }
 
@@ -30,13 +30,11 @@ public class Draw implements Visitor<Void> {
 
     @Override
     public Void onStrokeColor(final StrokeColor c) {
-
         return null;
     }
 
     @Override
     public Void onFill(final Fill f) {
-
         return null;
     }
 
