@@ -3,6 +3,7 @@ package edu.luc.etl.cs313.android.shapes.android;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import edu.luc.etl.cs313.android.shapes.model.*;
 
 /**
@@ -52,6 +53,7 @@ public class Draw implements Visitor<Void> {
 
     @Override
     public Void onRectangle(final Rectangle r) {
+        canvas.drawRect(r, this.paint);
 
         return null;
     }
