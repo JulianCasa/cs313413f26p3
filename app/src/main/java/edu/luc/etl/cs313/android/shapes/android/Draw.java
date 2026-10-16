@@ -31,45 +31,80 @@ public class Draw implements Visitor<Void> {
 
     @Override
     public Void onStrokeColor(final StrokeColor c) {
+        int oldColor = paint.getColor();
+
+        paint.setColor(c.getColor());
+        c.getShape().accept(this);
+
+        paint.setColor(oldColor);
         return null;
     }
 
     @Override
     public Void onFill(final Fill f) {
+        Paint.Style oldStyle = paint.getStyle();
+
+        paint.setStyle(Style.FILL_AND_STROKE);
+        f.getShape().accept(this);
+
+        paint.setStyle(oldStyle);
         return null;
     }
 
     @Override
     public Void onGroup(final Group g) {
+        for (Shape shape : g.getShapes()) {
+            shape.accept(this);
+        }
 
         return null;
     }
 
     @Override
     public Void onLocation(final Location l) {
+        canvas.translate(l.getX(), l.getY());
 
+        l.getShape().accept(this);
+
+        canvas.translate(-l.getX(), -l.getY());
         return null;
     }
 
     @Override
     public Void onRectangle(final Rectangle r) {
-        canvas.drawRect(r, this.paint);
+        canvas.drawRect(0, 0, r.getWidth(), r.getHeight(), paint);
 
         return null;
     }
 
     @Override
     public Void onOutline(Outline o) {
+        Paint.Style oldStyle = paint.getStyle();
 
+        paint.setStyle(Style.STROKE);
+        o.getShape().accept(this);
+
+        paint.setStyle(oldStyle);
         return null;
     }
 
     @Override
     public Void onPolygon(final Polygon s) {
+        int n = s.getPoints().size();
+        float[] pts = new float[n * 4];
 
-        final float[] pts = null;
+        for (int i = 0; i < n; i++) {
+            Point current = s.getPoints().get(i);
+            Point next = s.getPoints().get((i + 1) % n);
+
+            pts[i * 4] = current.getX();
+            pts[i * 4 + 1] = current.getY();
+            pts[i * 4 + 2] = next.getX();
+            pts[i * 4 + 3] = next.getY();
+        }
 
         canvas.drawLines(pts, paint);
         return null;
     }
+
 }
